@@ -16,13 +16,10 @@ check_package = '''
                     fi'''
 
 
-def connection(ip, username, password=None, public_key=None):
+def connection(ip, username=None, password=None, public_key=None):
     cl = paramiko.SSHClient()
     cl.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    if password != None:
-        cl.connect(hostname="217.25.94.30", username="root", password=pw)
-    elif public_key != None:
-        cl.connect(hostname="217.25.94.30", username="root", key_filename=public_key)
+    cl.connect(hostname=ip, username=username, pkey=public_key)
     return cl
 
 
@@ -42,7 +39,7 @@ def install_psql(ssh_connection, package_name):
     if package_name == 'yum':
         command = 'yum install -y psql'
     elif package_name == 'apt':
-        command = 'apt install -y psql'
+        command = 'sudo apt update&&apt install -y psql'
     elif package_name == 'dnf':
         command = 'dnf install -y psql'
     stdin, stdout, stderr = ssh_connection.exec_command(command)
@@ -97,10 +94,10 @@ def main():
         choice = input('You want to authenticate with password (1) or custom public key(2)?')
         if choice == '1':
             pw = getpass.getpass(f"Enter {USER} Password on remote host:\n")
-            ssh_connection = connection(arguments.host, username=USER, password=pw)
+            ssh_connection = connection(ip=arguments.host, username=USER, password=pw)
         elif choice == '2':
             public_key = input("Enter Path to Public Key:\n")
-            ssh_connection = connection(arguments.host, username=USER, public_key=public_key)
+            ssh_connection = connection(ip=arguments.host, username=USER, public_key=public_key)
 
     while True:
         print_commands()
