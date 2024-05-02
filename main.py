@@ -108,10 +108,9 @@ def print_commands():
 def main():
     USER = os.getlogin()
     PUBLICKEY = os.path.expanduser('~/.ssh/id_rsa.pub')
-    print(PUBLICKEY)
     arguments = parse_arguments()
     try:
-        ssh_connection = connection(arguments.host, username="root", key=PUBLICKEY, port=arguments.port)
+        ssh_connection = connection(arguments.host, username=USER, key=PUBLICKEY, port=arguments.port)
         print( arguments.port)
     except Exception as e:
         choice = input('You want to authenticate with password (1) or custom public key(2)?')

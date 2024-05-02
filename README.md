@@ -556,28 +556,41 @@ invoke-rc.d: policy-rc.d denied execution of start.
 
 Processing triggers for libc-bin (2.39-0ubuntu8.1) ...
 
+
 PSQL insertion complete
+
 2
-root
+
 
 echo -e "listen_addresses = '*'" >>  /etc/postgresql/16/main/postgresql.conf
 
 sudo echo -e "host      all     all     0.0.0.0/0       password" >>  /etc/postgresql/16/main/pg_hba.conf
 
 sudo service postgresql restart
+
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres'"
+
 PSQL installing and configuring complete
+
 1 - full_install_psql
+
 2 - health_check
 Enter your choice: 2
- ?column? 
-##----------
+
+ ?column?
+
+"------------"
+
         1
+
 (1 row)
 
 
 1 - full_install_psql
+
 2 - health_check
+
 Enter your choice: exit
+
 Exiting program
 ---------
