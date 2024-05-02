@@ -18,7 +18,7 @@ check_package = '''
 def connection(ip, username=None, password=None, key=None, port=None):
     try:
         if port is None:
-            port=75
+            port=22
         cl = paramiko.SSHClient()
         cl.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         if password is None:
@@ -58,15 +58,10 @@ def install_psql(ssh_connection, package_name):
 
 def edit_config(ssh_connection):
     start_psql = ssh_command(ssh_connection, "service postgresql start")
-    print("-----------")
     print(ssh_command(ssh_connection, "whoami"))
     path_to_conf = ssh_command(ssh_connection, "sudo -u postgres psql -c 'SHOW config_file' | grep 'postgresql'")
-    print("-----------")
     path_to_hba = ssh_command(ssh_connection, "sudo -u postgres psql -c 'SHOW hba_file' | grep 'pg_hba'")
-    print("-----------")
     commands = [
-        f"chmod 777 {path_to_conf}",
-        f"chmod 777  {path_to_hba}",
         f'''echo -e "listen_addresses = '*'" >> {path_to_conf}''',
         f'''sudo echo -e "host\tall\tall\t0.0.0.0/0\tpassword" >> {path_to_hba}''',
         "sudo service postgresql restart",
@@ -74,7 +69,6 @@ def edit_config(ssh_connection):
     ]
     for command in commands:
         ssh_command(ssh_connection, command)
-        print("-----------")
         print(command)
 
 
@@ -145,4 +139,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main();
+    main()
