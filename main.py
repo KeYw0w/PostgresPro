@@ -112,7 +112,7 @@ def main():
         ssh_connection = connection(arguments.host, username=USER, key=PUBLICKEY, port=arguments.port)
         print( arguments.port)
     except Exception as e:
-        choice = input('You want to authenticate with password (1) or custom public key(2)?')
+        choice = input('You want to auth with password (1) or custom public key(2)?')
         if choice == '1':
             pw = getpass.getpass(f"Enter {USER} Password on remote host:\n")
             ssh_connection = connection(ip=arguments.host, username=USER, password=pw)
