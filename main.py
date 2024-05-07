@@ -115,7 +115,7 @@ def main():
         choice = input('You want to authenticate with password (1) or custom public key(2)?')
         if choice == '1':
             pw = getpass.getpass(f"Enter {USER} Password on remote host:\n")
-            ssh_connection = connection(ip=arguments.host, username="keyw0w", password=pw)
+            ssh_connection = connection(ip=arguments.host, username=USER, password=pw)
         elif choice == '2':
             public_key = input("Enter Path to Public Key:\n")
             ssh_connection = connection(ip=arguments.host, username=USER, public_key=public_key)
