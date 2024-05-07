@@ -15,7 +15,7 @@ check_package = '''
                     fi'''
 
 
-def connection(ip, username=None, password=None, key=None, port=None):
+def connection(ip, username=None, password=None, key=None, port=None, public_key=None):
     try:
         if port is None:
             port=22
