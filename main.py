@@ -36,7 +36,6 @@ def ssh_command(ssh_connection, command):
         return stdout.read().decode('utf-8')
     else:
         print(stdout.read().decode('utf-8'))
-        # print(stdin.read().decode('utf-8'))
         raise Exception(stderr.read().decode('utf-8'))
 
 
