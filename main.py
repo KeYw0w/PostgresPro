@@ -21,10 +21,10 @@ def connection(ip, username=None, password=None, key=None, port=None, public_key
             port=22
         cl = paramiko.SSHClient()
         cl.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        if password is None:
+        if password is not None:
             cl.connect(hostname=ip, username=username, password=password, port=port)
         else:
-            cl.connect(hostname=ip, username=username, pkey=key)
+            cl.connect(hostname=ip, username=username, pkey=key,port=port)
     except Exception as e:
         print(e)
     return cl
@@ -109,8 +109,7 @@ def main():
     PUBLICKEY = os.path.expanduser('~/.ssh/id_rsa.pub')
     arguments = parse_arguments()
     try:
-        ssh_connection = connection(arguments.host, username=USER, key=PUBLICKEY, port=arguments.port)
-        print( arguments.port)
+        ssh_connection = connection(arguments.host, username=USER, public_key=PUBLICKEY, port=22)
     except Exception as e:
         choice = input('You want to auth with password (1) or custom public key(2)?')
         if choice == '1':
@@ -131,7 +130,9 @@ def main():
             try:
                 commands[input_user](ssh_connection)
             except Exception as e:
+
                 print("Something went wrong")
+                print(e)
         else:
             print("Invalid command!")
 
