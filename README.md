@@ -1,21 +1,47 @@
+# PostgresPro_tt
+### Задача
 
-1. **Full Installation of PostgreSQL**
-   - Installs all necessary packages and dependencies for PostgreSQL.
-   - Configures PostgreSQL with default settings.
-   - Sets up PostgreSQL to listen on all network interfaces.
-   - Configures PostgreSQL to allow password authentication for all users.
-   - Restarts the PostgreSQL service.
-   - Sets the password for the PostgreSQL user to 'postgres'.
+Реализовать консольное приложение, которое будет устанавливать PostgreSQL на удаленный хост
 
-2. **Health Check**
-   - Checks the health of the PostgreSQL server by executing a simple query (`select 1;`).
-   - Displays the result of the query.
+---
+
+Реализация должна включать:
+* подключение к удаленному хосту по ssh
+* инсталляцию PostgreSQL на удаленный хост
+* настройку PostgreSQL для приема внешних соединений, т.е. БД должна отвечать на внешние sql запросы.
+
+Требования
+* приложение принимает один параметр - ip или адрес удаленного хоста
+* приложение должно сообщать статус выполнения инсталляции
+  
+Будет плюсом
+* приложение выполняет проверку работы БД, выполняя sql запрос (SELECT 1)
+
+Требования к коду
+* язык разработки: python, golang, rust
+* библиотеки можно использовать любые
+* код должен быть выложен на Github с Readme файлом с инструкцией по запуску и примерами. Важно, чтобы по инструкции можно было запустить код и он работал
+* при возникновении вопросов по ТЗ оставляем принятие решения за тобой.
+
+### Решение
+
+##Запуск скрипта
+pyton3 main.py HOST --port PORT
+Параметры:
+HOST - hostname или ip целевого сервера (обязательный параметр)
+PORT - Номер порта на котором работает ssh-сервер(необязательный параметр, по-умолчанию выбирается порт 22)
+
+После запуска скрипта появляется "меню":
+```
+1 - full_install_psql
+2 - health_check
+Enter your choice:
+```
+full_install_psql - устанавливает Postgresql и настраивает его на прием внешних запросов 
+healt_check - проверяет работу сервиса psql.
    
-****Example:****
-'''
-➜  PostgresPro git:(main) ✗ python3 main.py localhost --port 75
-/Users/antonsemenov/.ssh/id_rsa.pub
-75
+Example:
+```
 1 - full_install_psql
 2 - health_check
 Enter your choice: 1
@@ -589,9 +615,12 @@ Enter your choice: 2
 1 - full_install_psql
 
 2 - health_check
-'''
+
 
 Enter your choice: exit
 
 Exiting program
 ---------
+```
+### Вопросы и решения
+Проблема работы из под пользователя не имеющим права, схожие с root'ом, требуется ввод пароля. Решение: предварительное добавление пользователя в файл /etc/sudoers и добавление ему полных прав.
