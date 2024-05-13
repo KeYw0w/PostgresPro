@@ -15,16 +15,14 @@ check_package = '''
                     fi'''
 
 
-def connection(ip, username=None, password=None, key=None, port=None, public_key=None):
+def connection(ip, username=None, password=None, public_key=None, port=22):
     try:
-        if port is None:
-            port=22
         cl = paramiko.SSHClient()
         cl.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         if password is not None:
             cl.connect(hostname=ip, username=username, password=password, port=port)
         else:
-            cl.connect(hostname=ip, username=username, pkey=key,port=port)
+            cl.connect(hostname=ip, username=username, key_filename=public_key, port=port)
     except Exception as e:
         print(e)
     return cl
@@ -52,12 +50,10 @@ def install_psql(ssh_connection, package_name):
         command = "dnf install -y postgresql-16"
     stdin, stdout, stderr = ssh_connection.exec_command(command=command)
     while line := stdout.readline(): print(line)
-    print("PSQL insertion complete")
 
 
 def edit_config(ssh_connection):
     start_psql = ssh_command(ssh_connection, "service postgresql start")
-    print(ssh_command(ssh_connection, "whoami"))
     path_to_conf = ssh_command(ssh_connection, "sudo -u postgres psql -c 'SHOW config_file' | grep 'postgresql'")
     path_to_hba = ssh_command(ssh_connection, "sudo -u postgres psql -c 'SHOW hba_file' | grep 'pg_hba'")
     commands = [
@@ -68,13 +64,13 @@ def edit_config(ssh_connection):
     ]
     for command in commands:
         ssh_command(ssh_connection, command)
-        print(command)
 
 
 def health_check(ssh_connection):
     command = f'''sudo -u postgres psql -c "SELECT 1;"'''
     output = ssh_command(ssh_connection, command)
     print(output)
+
 
 
 def parse_arguments():
@@ -86,11 +82,9 @@ def parse_arguments():
 
 def full_install_psql(ssh_connection):
     package_manager = check_package_manager(ssh_connection)
-    print(1)
     install_psql(ssh_connection, package_manager)
-    print(2)
     edit_config(ssh_connection)
-    print("PSQL installing and configuring complete")
+    print("\033[32m" + "PSQL installing and configuring complete" + "\033[0m")
 
 
 commands = {
@@ -102,6 +96,7 @@ commands = {
 def print_commands():
     for command in commands:
         print(f"{command} - {commands[command].__name__}")
+    print("exit - for exit from program")
 
 
 def main():
@@ -109,8 +104,9 @@ def main():
     PUBLICKEY = os.path.expanduser('~/.ssh/id_rsa.pub')
     arguments = parse_arguments()
     try:
-        ssh_connection = connection(arguments.host, username=USER, public_key=PUBLICKEY, port=22)
+        ssh_connection = connection(arguments.host, username="root", public_key=PUBLICKEY, port=arguments.port)
     except Exception as e:
+        print(e)
         choice = input('You want to auth with password (1) or custom public key(2)?')
         if choice == '1':
             pw = getpass.getpass(f"Enter {USER} Password on remote host:\n")
@@ -131,8 +127,8 @@ def main():
                 commands[input_user](ssh_connection)
             except Exception as e:
 
-                print("Something went wrong")
-                print(e)
+                print(f"Exception: {e}")
+
         else:
             print("Invalid command!")
 
