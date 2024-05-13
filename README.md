@@ -25,10 +25,12 @@
 
 ### Решение
 
+---
+
 ##Запуск скрипта
-pyton3 main.py HOST --port PORT
+python3 main.py [--port PORT] host
 Параметры:
-HOST - hostname или ip целевого сервера (обязательный параметр)
+host - hostname или ip целевого сервера (обязательный параметр)
 PORT - Номер порта на котором работает ssh-сервер(необязательный параметр, по-умолчанию выбирается порт 22)
 
 После запуска скрипта появляется "меню":
@@ -42,21 +44,17 @@ healt_check - проверяет работу сервиса psql.
    
 Example:
 ```
+$ python3 PostgresPro/main.py localhost 75
 1 - full_install_psql
 2 - health_check
 Enter your choice: 1
-1
 Hit:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease
 
-Get:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease [89.7 kB]
+Hit:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease
 
 Hit:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease
 
 Hit:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease
-
-Get:5 http://ports.ubuntu.com/ubuntu-ports noble-updates/main arm64 Packages [24.0 kB]
-
-Fetched 114 kB in 2s (52.0 kB/s)
 
 Reading package lists...
 
@@ -176,11 +174,11 @@ Get:28 http://ports.ubuntu.com/ubuntu-ports noble/main arm64 postgresql-client-1
 
 Get:29 http://ports.ubuntu.com/ubuntu-ports noble/main arm64 postgresql-16 arm64 16.2-1ubuntu4 [15.2 MB]
 
-Fetched 55.8 MB in 55s (1023 kB/s)
+Fetched 55.8 MB in 32s (1720 kB/s)
 
 Selecting previously unselected package perl-modules-5.38.
 
-(Reading database ... 11142 files and directories currently installed.)
+(Reading database ... 11144 files and directories currently installed.)
 
 Preparing to unpack .../00-perl-modules-5.38_5.38.2-3.2build2_all.deb ...
 
@@ -582,45 +580,21 @@ invoke-rc.d: policy-rc.d denied execution of start.
 
 Processing triggers for libc-bin (2.39-0ubuntu8.1) ...
 
-
-PSQL insertion complete
-
-2
-
-
-echo -e "listen_addresses = '*'" >>  /etc/postgresql/16/main/postgresql.conf
-
-sudo echo -e "host      all     all     0.0.0.0/0       password" >>  /etc/postgresql/16/main/pg_hba.conf
-
-sudo service postgresql restart
-
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres'"
-
 PSQL installing and configuring complete
-
 1 - full_install_psql
-
 2 - health_check
 Enter your choice: 2
-
- ?column?
-
-"------------"
-
+ ?column? 
+----------
         1
-
 (1 row)
 
 
 1 - full_install_psql
-
 2 - health_check
-
-
 Enter your choice: exit
-
 Exiting program
----------
 ```
+Для тестирования использовал контейнеры различной конфигурации.
 ### Вопросы и решения
 Проблема работы из под пользователя не имеющим права, схожие с root'ом, требуется ввод пароля. Решение: предварительное добавление пользователя в файл /etc/sudoers и добавление ему полных прав.
