@@ -8,7 +8,6 @@ RUN mkdir /var/run/sshd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN echo PubkeyAuthentication yes >> /etc/ssh/sshd_config
-RUN touch id_rsa
 RUN echo "{PUBLIC_SSH_KEY}" > /root/.ssh/authorized_keys
 
 EXPOSE 22
