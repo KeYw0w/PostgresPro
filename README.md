@@ -12,7 +12,7 @@
    - Displays the result of the query.
    
 ****Example:****
-
+'''
 ➜  PostgresPro git:(main) ✗ python3 main.py localhost --port 75
 /Users/antonsemenov/.ssh/id_rsa.pub
 75
@@ -589,6 +589,7 @@ Enter your choice: 2
 1 - full_install_psql
 
 2 - health_check
+'''
 
 Enter your choice: exit
 
