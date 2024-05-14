@@ -15,8 +15,9 @@ check_package = '''
                     fi'''
 
 
-def connection(ip, username=None, password=None, public_key=None, port=22):
+def connection(ip, username=None, password=None, public_key=None, port=None):
     try:
+        if port is None: port = 22
         cl = paramiko.SSHClient()
         cl.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         if password is not None:
